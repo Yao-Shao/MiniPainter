@@ -1,0 +1,9 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+    <file>src/Pen.png</file>
+    <file>src/Line.png</file>
+    <file>src/Rectangle.png</file>
+    <file>src/Triangle.png</file>
+    <file>src/Eclipse.png</file>
+</qresource>
+</RCC>

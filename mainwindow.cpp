@@ -49,6 +49,52 @@ void MainWindow::createToolBar()
 {
     QToolBar *toolBar = addToolBar("Tool");             /*add tool bar object*/
 
+    /* Graph type */
+    QActionGroup *graghGroup = new QActionGroup(toolBar);
+
+    QAction *drawPenAction = new QAction("Pen", toolBar);
+    drawPenAction->setIcon(QIcon(":/src/Pen.png"));
+    drawPenAction->setToolTip(tr("Free draw"));
+    drawPenAction->setCheckable(true);
+    drawPenAction->setChecked(true);
+    graghGroup->addAction(drawPenAction);
+    toolBar->addAction(drawPenAction);
+
+    QAction *drawLineAction = new QAction("Line", toolBar);
+    drawLineAction->setIcon(QIcon(":/src/Line.png"));
+    drawLineAction->setToolTip(tr("Line"));
+    drawLineAction->setCheckable(true);
+    graghGroup->addAction(drawLineAction);
+    toolBar->addAction(drawLineAction);
+
+    QAction *drawEclipseAction = new QAction("Eclipse", toolBar);
+    drawEclipseAction->setIcon(QIcon(":/src/Eclipse.png"));
+    drawEclipseAction->setToolTip(tr("Eclipse(ctrl for circle)"));
+    drawEclipseAction->setCheckable(true);
+    graghGroup->addAction(drawEclipseAction);
+    toolBar->addAction(drawEclipseAction);
+
+    QAction *drawRectangleAction = new QAction("Rectangle", toolBar);
+    drawRectangleAction->setIcon(QIcon(":/src/Rectangle.png"));
+    drawRectangleAction->setToolTip(tr("Rectangle(ctrl for square)"));
+    drawRectangleAction->setCheckable(true);
+    graghGroup->addAction(drawRectangleAction);
+    toolBar->addAction(drawRectangleAction);
+
+    QAction *drawTriangleAction = new QAction("Triangle", toolBar);
+    drawTriangleAction->setIcon(QIcon(":/src/Triangle.png"));
+    drawTriangleAction->setToolTip(tr("Triangle"));
+    drawTriangleAction->setCheckable(true);
+    graghGroup->addAction(drawTriangleAction);
+    toolBar->addAction(drawTriangleAction);
+
+    connect(drawPenAction, SIGNAL(triggered()), this, SLOT(drawPenActionTrigger()));
+    connect(drawLineAction, SIGNAL(triggered()), this, SLOT(drawLineActionTrigger()));
+    connect(drawEclipseAction, SIGNAL(triggered()), this, SLOT(drawEclipseActionTrigger()));
+    connect(drawRectangleAction, SIGNAL(triggered()), this, SLOT(drawRectangleActionTrigger()));
+    connect(drawTriangleAction, SIGNAL(triggered()), this, SLOT(drawTriangleActionTrigger()));
+
+
     /* Line Style */
     styleLabel = new QLabel(tr("Line style: "));
     styleComboBox = new QComboBox;
@@ -102,13 +148,40 @@ void MainWindow::showColor()
     }
 }
 
+void MainWindow::drawLineActionTrigger()
+{
+    drawWidget->setGraphType(DrawWidget::LINE);
+}
+
+void MainWindow::drawPenActionTrigger()
+{
+    drawWidget->setGraphType(DrawWidget::PEN);
+}
+
+void MainWindow::drawEclipseActionTrigger()
+{
+    drawWidget->setGraphType(DrawWidget::ECLIPSE);
+}
+
+void MainWindow::drawRectangleActionTrigger()
+{
+    drawWidget->setGraphType(DrawWidget::RECTANGLE);
+}
+
+void MainWindow::drawTriangleActionTrigger()
+{
+    drawWidget->setGraphType(DrawWidget::TRIANGLE);
+}
+
+
 void MainWindow::openFile()
 {
-    openFileAddr = QFileDialog::getOpenFileName(this, "Open File", "/", "png files(*.png)");
+    openFileAddr = QFileDialog::getOpenFileName(this, "Open File", "/", "png files(*.png *.jpg)");
+    drawWidget->openFile(openFileAddr);
 }
 
 void MainWindow::saveFile()
 {
-    saveFileAddr = QFileDialog::getSaveFileName(this, "Save File", "/", "png files(*.png)");
+    saveFileAddr = QFileDialog::getSaveFileName(this, "Save File", "/", "png files(*.png *.jpg)");
     drawWidget->saveFile(saveFileAddr);
 }

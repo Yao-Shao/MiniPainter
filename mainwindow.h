@@ -27,6 +27,12 @@ public slots:
     void showColor();
     void openFile();
     void saveFile();
+    void drawLineActionTrigger();
+    void drawPenActionTrigger();
+    void drawEclipseActionTrigger();
+    void drawRectangleActionTrigger();
+    void drawTriangleActionTrigger();
+
 
 private:
     DrawWidget *drawWidget;
