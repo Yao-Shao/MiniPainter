@@ -57,7 +57,7 @@ private:
 
     int style;
     int weight;
-    int grapgType;
+    int graphType;
     QColor color;
 
     QColor backgroundColor;

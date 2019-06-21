@@ -45,7 +45,7 @@ void DrawWidget::setColor(QColor c)
 
 void DrawWidget::setGraphType(int t)
 {
-    grapgType = t;
+    graphType = t;
 }
 
 void DrawWidget::mousePressEvent(QMouseEvent *e)
@@ -64,7 +64,7 @@ void DrawWidget::mouseMoveEvent(QMouseEvent *e)
         {
             endPos = e->pos();
             *tmpPix = *pix;
-            if(grapgType == PEN){
+            if(graphType == PEN){
                 drawPix(pix);
             }else{
                 drawPix(tmpPix);
@@ -76,7 +76,7 @@ void DrawWidget::mouseReleaseEvent(QMouseEvent *e)
 {
     isDrawing = false;
     endPos = e->pos();
-    if(grapgType != PEN)
+    if(graphType != PEN)
     {
         drawPix(pix);
     }
@@ -96,7 +96,7 @@ void DrawWidget::drawPix(QPixmap *p)
     painter->begin(p);
     painter->setPen(pen);
 
-    switch(grapgType){
+    switch(graphType){
     case PEN : {
         painter->drawLine(startPos, endPos);
         startPos = endPos;
