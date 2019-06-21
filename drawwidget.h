@@ -23,6 +23,8 @@ public:
     void mousePressEvent(QMouseEvent *);
     void mouseMoveEvent(QMouseEvent *);
     void mouseReleaseEvent(QMouseEvent *);
+    void keyPressEvent(QKeyEvent *);
+    void keyReleaseEvent(QKeyEvent *);
     void paintEvent(QPaintEvent *);
     void drawPix(QPixmap *);
     void resizeEvent(QResizeEvent *);
@@ -61,6 +63,7 @@ private:
     QColor backgroundColor;
 
     bool isDrawing;
+    bool normalizeGraph;
 };
 
 #endif // DRAWWIDGET_H

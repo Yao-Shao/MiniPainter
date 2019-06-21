@@ -1,11 +1,14 @@
 #include "drawwidget.h"
 #include <QtGui>
 #include <QPen>
+#include <QKeyEvent>
+#include <iostream>
 
 DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)
 {
     setAutoFillBackground(true);        /*set the backgroud color*/
     setPalette(QPalette(Qt::white));
+    setFocusPolicy(Qt::StrongFocus);
 
     pix = new QPixmap(size());          /*create pixmap*/
     tmpPix = new QPixmap(size());
@@ -16,6 +19,7 @@ DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)
     setMinimumSize(600, 400);
 
     isDrawing = false;
+    normalizeGraph = false;
 }
 
 DrawWidget::~DrawWidget()
@@ -57,13 +61,15 @@ void DrawWidget::mousePressEvent(QMouseEvent *e)
 void DrawWidget::mouseMoveEvent(QMouseEvent *e)
 {
     if(isDrawing)
-    {
-        endPos = e->pos();
-        tmpPix = pix;
-        if(grapgType == PEN){
-            drawPix(pix);
+        {
+            endPos = e->pos();
+            *tmpPix = *pix;
+            if(grapgType == PEN){
+                drawPix(pix);
+            }else{
+                drawPix(tmpPix);
+            }
         }
-    }
 }
 
 void DrawWidget::mouseReleaseEvent(QMouseEvent *e)
@@ -87,7 +93,7 @@ void DrawWidget::drawPix(QPixmap *p)
     pen.setWidth(weight);
     pen.setColor(color);
 
-    painter->begin(pix);
+    painter->begin(p);
     painter->setPen(pen);
 
     switch(grapgType){
@@ -101,18 +107,33 @@ void DrawWidget::drawPix(QPixmap *p)
         break;
     }
     case ECLIPSE : {
-        painter->drawEllipse(startPos.x(),
-                             startPos.y(),
-                             endPos.x() - startPos.x(),
-                             endPos.y() - startPos.y());
+        if(normalizeGraph == true){
+            painter->drawEllipse(startPos.x(),
+                                 startPos.y(),
+                                 endPos.x() - startPos.x(),
+                                 endPos.x() - startPos.x());
+        }else{
+            painter->drawEllipse(startPos.x(),
+                                 startPos.y(),
+                                 endPos.x() - startPos.x(),
+                                 endPos.y() - startPos.y());
+        }
+
 
         break;
     }
     case RECTANGLE : {
-        painter->drawRect(startPos.x(),
-                          startPos.y(),
-                          endPos.x() - startPos.x(),
-                          endPos.y() - startPos.y());
+        if(normalizeGraph == true){
+            painter->drawRect(startPos.x(),
+                              startPos.y(),
+                              endPos.x() - startPos.x(),
+                              endPos.x() - startPos.x());
+        }else{
+            painter->drawRect(startPos.x(),
+                              startPos.y(),
+                              endPos.x() - startPos.x(),
+                              endPos.y() - startPos.y());
+        }
         break;
     }
     case TRIANGLE : {
@@ -161,6 +182,7 @@ void DrawWidget::clear()
     QPixmap *clearPix = new QPixmap(size());
     clearPix->fill(Qt::white);
     pix = clearPix;
+    tmpPix = clearPix;
     update();
 }
 
@@ -172,6 +194,21 @@ void DrawWidget::saveFile(QString addr)
 void DrawWidget::openFile(QString addr)
 {
     *pix = QPixmap(addr);
+}
+
+void DrawWidget::keyPressEvent(QKeyEvent *e)
+{
+    switch(e->key()){
+    case Qt::Key_Control : normalizeGraph = true;break;
+    }
+}
+
+void DrawWidget::keyReleaseEvent(QKeyEvent *e)
+{
+    switch(e->key())
+    {
+    case Qt::Key_Control : normalizeGraph = false;
+    }
 }
 
 
