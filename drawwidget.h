@@ -78,6 +78,7 @@ private:
     int weight;
     int graphType;
     QColor color;
+    QString openFileAddr;
 
     QColor backgroundColor;
 

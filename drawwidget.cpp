@@ -211,6 +211,9 @@ bool DrawWidget::saveFile(QString addr)
 bool DrawWidget::openFile(QString addr)
 {
     *pix = QPixmap(addr);
+    openFileAddr = addr;
+    undoList.clear();
+    redoList.clear();
     return true;
 }
 
@@ -239,6 +242,9 @@ void DrawWidget::undo()
     redoList.push_back(undoList.back());
     undoList.pop_back();
     clear();
+    if(openFileAddr.size() > 0){
+        *pix = QPixmap(openFileAddr);
+    }
     qDebug() << undoList.size()<<"\n";
     for(vector<myGraph *>::iterator i = undoList.begin(); i != undoList.end(); i++){
         repaintGraph(*i);
