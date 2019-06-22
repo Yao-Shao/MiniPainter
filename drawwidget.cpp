@@ -19,6 +19,7 @@ DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)
     setMinimumSize(600, 400);
 
     isDrawing = false;
+    isSaved = false;
     normalizeGraph = false;
 }
 
@@ -61,15 +62,16 @@ void DrawWidget::mousePressEvent(QMouseEvent *e)
 void DrawWidget::mouseMoveEvent(QMouseEvent *e)
 {
     if(isDrawing)
-        {
-            endPos = e->pos();
-            *tmpPix = *pix;
-            if(graphType == PEN){
-                drawPix(pix);
-            }else{
-                drawPix(tmpPix);
-            }
+    {
+        isSaved = false;
+        endPos = e->pos();
+        *tmpPix = *pix;
+        if(graphType == PEN){
+            drawPix(pix);
+        }else{
+            drawPix(tmpPix);
         }
+    }
 }
 
 void DrawWidget::mouseReleaseEvent(QMouseEvent *e)
@@ -209,6 +211,11 @@ void DrawWidget::keyReleaseEvent(QKeyEvent *e)
     {
     case Qt::Key_Control : normalizeGraph = false;
     }
+}
+
+bool DrawWidget::getSaveStatus()
+{
+    return isSaved;
 }
 
 

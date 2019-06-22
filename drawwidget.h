@@ -28,6 +28,8 @@ public:
     void paintEvent(QPaintEvent *);
     void drawPix(QPixmap *);
     void resizeEvent(QResizeEvent *);
+
+    bool getSaveStatus();
     void saveFile(QString addr);
     void openFile(QString addr);
 
@@ -64,6 +66,7 @@ private:
 
     bool isDrawing;
     bool normalizeGraph;
+    bool isSaved;
 };
 
 #endif // DRAWWIDGET_H

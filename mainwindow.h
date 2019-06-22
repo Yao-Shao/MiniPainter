@@ -25,6 +25,7 @@ public:
 public slots:
     void showStyle();
     void showColor();
+//    bool save();
     void openFile();
     void saveFile();
     void drawLineActionTrigger();
