@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     drawWidget = new DrawWidget;
     setCentralWidget(drawWidget);               /*set the paint area as central window*/
+    setWindowTitle("GraphPainter");
+    setWindowIcon(QIcon(":/src/logo.png"));
 
     createMenu();
     createToolBar();

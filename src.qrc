@@ -5,5 +5,6 @@
     <file>src/Rectangle.png</file>
     <file>src/Triangle.png</file>
     <file>src/Eclipse.png</file>
+    <file>src/logo.png</file>
 </qresource>
 </RCC>
