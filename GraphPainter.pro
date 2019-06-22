@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    drawwidget.cpp
+    drawwidget.cpp \
+    graph.cpp
 
 HEADERS += \
         mainwindow.h \
-    drawwidget.h
+    drawwidget.h \
+    graph.h
 
 FORMS += \
         mainwindow.ui

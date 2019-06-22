@@ -3,6 +3,8 @@
 #include <QPen>
 #include <QKeyEvent>
 #include <iostream>
+#include <QtDebug>
+#include <graph.h>
 
 DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)
 {
@@ -12,11 +14,12 @@ DrawWidget::DrawWidget(QWidget *parent) : QWidget(parent)
 
     pix = new QPixmap(size());          /*create pixmap*/
     tmpPix = new QPixmap(size());
+    qDebug() << size();
 
     backgroundColor = Qt::white;
     pix->fill( backgroundColor);               /*fill the background*/
     setGraphType(PEN);
-    setMinimumSize(600, 400);
+    setMinimumSize(LENGTH, WIDTH);
 
     isDrawing = false;
     isSaved = false;
@@ -98,6 +101,7 @@ void DrawWidget::drawPix(QPixmap *p)
     painter->begin(p);
     painter->setPen(pen);
 
+
     switch(graphType){
     case PEN : {
         painter->drawLine(startPos, endPos);
@@ -120,8 +124,6 @@ void DrawWidget::drawPix(QPixmap *p)
                                  endPos.x() - startPos.x(),
                                  endPos.y() - startPos.y());
         }
-
-
         break;
     }
     case RECTANGLE : {
@@ -146,7 +148,17 @@ void DrawWidget::drawPix(QPixmap *p)
         painter->drawPolygon(triangle, Qt::WindingFill);
         break;
     }
-    default: break;
+    default:
+    {
+        qDebug() << "Unsupported graph type!\n";
+        return;
+    }
+    }
+
+    if(p==pix)
+    {
+        myGraph *tmpGraph = new myGraph(startPos, endPos, graphType);
+        undoList.push_back(tmpGraph);
     }
 
     painter->end();
@@ -183,8 +195,9 @@ void DrawWidget::clear()
 {
     QPixmap *clearPix = new QPixmap(size());
     clearPix->fill(Qt::white);
-    pix = clearPix;
-    tmpPix = clearPix;
+    *pix = *clearPix;
+    *tmpPix = *clearPix;
+    delete clearPix;
     update();
 }
 
@@ -221,16 +234,97 @@ bool DrawWidget::getSaveStatus()
     return isSaved;
 }
 
+void DrawWidget::undo()
+{
+    redoList.push_back(undoList.back());
+    undoList.pop_back();
+    clear();
+    qDebug() << undoList.size()<<"\n";
+    for(vector<myGraph *>::iterator i = undoList.begin(); i != undoList.end(); i++){
+        repaintGraph(*i);
+    }
+    *tmpPix = *pix;
+    qDebug() << undoList.size()<<"\n";
+}
+
+void DrawWidget::redo()
+{
+    myGraph *redoGraph = redoList.back();
+    redoList.pop_back();
+    repaintGraph(redoGraph);
+    undoList.push_back(redoGraph);
+    *tmpPix = *pix;
+}
+
+void DrawWidget::repaintGraph(myGraph *g){
+    QPainter *painter = new QPainter;
+    QPen pen;
+    pen.setStyle((Qt::PenStyle)style);
+    pen.setWidth(weight);
+    pen.setColor(color);
+
+    painter->begin(pix);
+    painter->setPen(pen);
+
+    switch(g->type){
+    case PEN : {
+        painter->drawLine(g->p1, g->p2);
+        g->p2 = g->p1;
+        break;
+    }
+    case LINE : {
+        painter->drawLine(g->p1, g->p2);
+        break;
+    }
+    case ECLIPSE : {
+        if(normalizeGraph == true){
+            painter->drawEllipse(g->p1.x(),
+                                 g->p1.y(),
+                                 g->p2.x() - g->p1.x(),
+                                 g->p2.x() - g->p1.x());
+        }else{
+            painter->drawEllipse(g->p1.x(),
+                                 g->p1.y(),
+                                 g->p2.x() - g->p1.x(),
+                                 g->p2.y() - g->p1.y());
+        }
 
 
+        break;
+    }
+    case RECTANGLE : {
+        if(normalizeGraph == true){
+            painter->drawRect(g->p1.x(),
+                              g->p1.y(),
+                              g->p2.x() - g->p1.x(),
+                              g->p2.x() - g->p1.x());
+        }else{
+            painter->drawRect(g->p1.x(),
+                              g->p1.y(),
+                              g->p2.x() - g->p1.x(),
+                              g->p2.y() - g->p1.y());
+        }
+        break;
+    }
+    case TRIANGLE : {
+        QPolygonF triangle;
+        triangle << QPointF((g->p1.x() + g->p2.x())/2,g->p1.y())
+                 << QPointF(g->p1.x(), g->p2.y())
+                 << QPointF(g->p2.x(), g->p2.y());
+        painter->drawPolygon(triangle, Qt::WindingFill);
+        break;
+    }
+    default: break;
+    }
+    painter->end();
+    update();
+}
 
+int DrawWidget::getUndoSize(){
+    return int(undoList.size());
+}
 
-
-
-
-
-
-
-
-
-
+int DrawWidget::getRedoSize()
+{
+    return int(redoList.size());
+}

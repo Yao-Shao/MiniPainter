@@ -10,9 +10,6 @@
 #include <QPushButton>
 
 
-#define LENGTH 1080
-#define WIDTH 640
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -29,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
     showStyle();                                /*init*/
     drawWidget->setWidth((widthSpinBox->value()));
     drawWidget->setColor(Qt::black);
+//    setActionStatus();
 }
 
 MainWindow::~MainWindow()
@@ -57,6 +55,24 @@ void MainWindow::createMenu()
     connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
     connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
     connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
+
+    /* Edit */
+    QMenu *editMenu = ui->menuBar->addMenu("Edit");
+
+    QAction *redoAction = new QAction("Redo");
+//    redoAct =  redoAction;
+    redoAction->setShortcut((Qt::CTRL | Qt::Key_R));
+    editMenu->addAction(redoAction);
+//    redoAction->setEnabled(false);
+
+    QAction *undoAction = new QAction("Undo");
+//    undoAct = undoAction;
+    undoAction->setShortcut((Qt::CTRL | Qt::Key_Z));
+    editMenu->addAction(undoAction);
+//    undoAction->setEnabled(true);
+
+    connect(redoAction, SIGNAL(triggered()), this, SLOT(redoTrigger()));
+    connect(undoAction, SIGNAL(triggered()), this, SLOT(undoTrigger()));
 
 }
 
@@ -237,3 +253,32 @@ void MainWindow::closeEvent(QCloseEvent *e)
             e->ignore();
     }
 }
+
+void MainWindow::undoTrigger()
+{
+    if(drawWidget->getUndoSize() > 0){
+        drawWidget->undo();
+    }
+}
+
+void MainWindow::redoTrigger()
+{
+    if(drawWidget->getRedoSize() > 0){
+        drawWidget->redo();
+    }
+}
+/*
+void MainWindow::setActionStatus()
+{
+    if(drawWidget->getUndoSize() > 0){
+        undoAct->setEnabled(true);
+    }else{
+        undoAct->setEnabled(false);
+    }
+    if(drawWidget->getRedoSize() > 0){
+        redoAct->setEnabled(true);
+    }else{
+        redoAct->setEnabled(false);
+    }
+}
+*/

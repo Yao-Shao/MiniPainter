@@ -11,6 +11,14 @@
 #include <QPoint>
 #include <QPainter>
 #include <QPalette>
+#include <vector>
+#include <graph.h>
+
+
+#define LENGTH 1080
+#define WIDTH 640
+
+using namespace std;
 
 class DrawWidget : public QWidget
 {
@@ -28,6 +36,12 @@ public:
     void paintEvent(QPaintEvent *);
     void drawPix(QPixmap *);
     void resizeEvent(QResizeEvent *);
+    void repaintGraph(myGraph *g);
+    int getUndoSize();
+    int getRedoSize();
+
+    void undo();
+    void redo();
 
     bool getSaveStatus();
     bool saveFile(QString addr);
@@ -53,6 +67,9 @@ public slots:
 private:
     QPixmap *pix;
     QPixmap *tmpPix;
+
+    vector<class myGraph *> undoList;
+    vector<class myGraph *> redoList;
 
     QPoint startPos;
     QPoint endPos;

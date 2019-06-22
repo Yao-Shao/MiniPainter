@@ -37,6 +37,9 @@ public slots:
     void drawEclipseActionTrigger();
     void drawRectangleActionTrigger();
     void drawTriangleActionTrigger();
+    void undoTrigger();
+    void redoTrigger();
+//    void setActionStatus();
 
 
 private:
@@ -52,6 +55,9 @@ private:
     QString openFileAddr;
     QString saveFileAddr;
     Ui::MainWindow *ui;
+
+//    QAction *redoAct;
+//    QAction *undoAct;
 };
 
 #endif // MAINWINDOW_H
