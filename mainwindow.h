@@ -6,6 +6,7 @@
 #include <QLabel>
 #include <QComboBox>
 #include <QSpinBox>
+#include <QCloseEvent>
 #include "drawwidget.h"
 
 namespace Ui {
@@ -22,13 +23,15 @@ public:
     void createToolBar();
     void createMenu();
 
+protected:
+    void closeEvent(QCloseEvent *);
+
 public slots:
     void showStyle();
     void showColor();
     bool save();
     bool saveAs();
     void openFile();
-//    void saveFile();
     void drawLineActionTrigger();
     void drawPenActionTrigger();
     void drawEclipseActionTrigger();

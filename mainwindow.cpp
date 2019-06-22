@@ -5,6 +5,10 @@
 #include <QToolBar>
 #include <QColorDialog>
 #include <QFileDialog>
+#include <QMessageBox>
+#include <QAbstractButton>
+#include <QPushButton>
+
 
 #define LENGTH 1080
 #define WIDTH 640
@@ -207,5 +211,29 @@ bool MainWindow::save()
         return drawWidget->saveFile(saveFileAddr);
     }else{
         return saveAs();
+    }
+}
+
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    bool status = drawWidget->getSaveStatus();
+    if(status == false)
+    {
+		QMessageBox box;
+        box.setWindowTitle(tr("Warning"));
+       	box.setIcon(QMessageBox::Warning);
+        box.setText(tr(" Unsaved, do you wnat to save?"));
+        QPushButton *yesBtn = box.addButton(tr("Yes(&Y)"), QMessageBox::YesRole);
+        box.addButton(tr("No(&N)"), QMessageBox::NoRole);
+        QPushButton *cancelBut = box.addButton(tr("Cancel"), QMessageBox::RejectRole);
+       	box.exec();
+        if (box.clickedButton() == yesBtn)
+        {
+            if(saveAs() == false)
+                e->ignore();
+            return;
+        }
+        else if (box.clickedButton() == cancelBut)
+            e->ignore();
     }
 }
