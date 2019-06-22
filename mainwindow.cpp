@@ -36,13 +36,24 @@ void MainWindow::createMenu()
 {
     /* File */
     QMenu *fileMenu = ui->menuBar->addMenu("File");
+
     QAction *openAction = new QAction("Open");
+    openAction->setShortcut((Qt::CTRL | Qt::Key_O));
+
     QAction *saveAction = new QAction("Save");
+    saveAction->setShortcut((Qt::CTRL | Qt::Key_S));
+
+    QAction *saveAsAction = new QAction("Save as");
+    saveAsAction->setShortcut((Qt::CTRL | Qt::SHIFT |Qt::Key_S));
+
     fileMenu->addAction(openAction);
     fileMenu->addAction(saveAction);
+    fileMenu->addAction(saveAsAction);
 
     connect(openAction, SIGNAL(triggered()), this, SLOT(openFile()));
-    connect(saveAction, SIGNAL(triggered()), this, SLOT(saveFile()));
+    connect(saveAction, SIGNAL(triggered()), this, SLOT(save()));
+    connect(saveAsAction, SIGNAL(triggered()), this, SLOT(saveAs()));
+
 }
 
 void MainWindow::createToolBar()
@@ -180,8 +191,21 @@ void MainWindow::openFile()
     drawWidget->openFile(openFileAddr);
 }
 
-void MainWindow::saveFile()
+bool MainWindow::saveAs()
 {
     saveFileAddr = QFileDialog::getSaveFileName(this, "Save File", "/", "png files(*.png *.jpg)");
+    if(saveFileAddr.isEmpty())
+        return false;
     drawWidget->saveFile(saveFileAddr);
+    return true;
+}
+
+bool MainWindow::save()
+{
+    bool status = drawWidget->getSaveStatus();
+    if(status == true){
+        return drawWidget->saveFile(saveFileAddr);
+    }else{
+        return saveAs();
+    }
 }

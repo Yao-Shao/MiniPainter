@@ -188,14 +188,17 @@ void DrawWidget::clear()
     update();
 }
 
-void DrawWidget::saveFile(QString addr)
+bool DrawWidget::saveFile(QString addr)
 {
     pix->save(addr, "PNG");
+    isSaved = true;
+    return true;
 }
 
-void DrawWidget::openFile(QString addr)
+bool DrawWidget::openFile(QString addr)
 {
     *pix = QPixmap(addr);
+    return true;
 }
 
 void DrawWidget::keyPressEvent(QKeyEvent *e)

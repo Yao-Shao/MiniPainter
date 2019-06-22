@@ -30,8 +30,8 @@ public:
     void resizeEvent(QResizeEvent *);
 
     bool getSaveStatus();
-    void saveFile(QString addr);
-    void openFile(QString addr);
+    bool saveFile(QString addr);
+    bool openFile(QString addr);
 
     enum graphType{
         PEN,

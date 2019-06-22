@@ -25,9 +25,10 @@ public:
 public slots:
     void showStyle();
     void showColor();
-//    bool save();
+    bool save();
+    bool saveAs();
     void openFile();
-    void saveFile();
+//    void saveFile();
     void drawLineActionTrigger();
     void drawPenActionTrigger();
     void drawEclipseActionTrigger();
