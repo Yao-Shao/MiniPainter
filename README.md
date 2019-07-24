@@ -1,7 +1,5 @@
 # GraphPainter
-OOP Project
-
-
+powered by Qt
 
 ## Future improvements
 
